@@ -1,0 +1,85 @@
+SELECT
+ 
+T1.CardCode AS 'Cust Num',
+T1.CardName AS 'Cust Name',
+T0.SysDeb AS 'Debit Amt',
+T0.SysCred * -1 AS 'Credit Amt',
+ 
+CASE
+WHEN T0.TransType = 13 THEN 'AR Invoice'
+WHEN T0.TransType = 14 THEN 'AR Cred Memo'
+WHEN T0.TransType = 24 THEN 'Payment'
+ELSE 'Other'
+END AS 'Trans Type',
+ t0.LineMemo,
+T0.Ref1 AS 'Reference',
+FcCurrency AS 'Currency',
+ 
+CONVERT(VARCHAR(10), RefDate, 103) 'Posting Date',
+CONVERT(VARCHAR(10), DueDate, 103) 'Due Date',
+--CONVERT(VARCHAR(10), TaxDate, 103) 'Doc Date' ,
+ 
+CASE
+WHEN (DATEDIFF(DD,RefDate,Current_Timestamp)) +1 <  31 THEN
+CASE
+WHEN SysCred < > 0 THEN SysCred * -1
+ELSE T0.BalDueDeb 
+END
+END AS '0-30 Days',
+ 
+CASE
+WHEN (DATEDIFF(DD,RefDate,Current_Timestamp)) +1 > 30 
+AND (DATEDIFF(DD,RefDate,Current_Timestamp)) +1 < 61 THEN
+CASE
+WHEN SysCred < > 0 THEN SysCred * -1
+ELSE T0.BalDueDeb
+END
+END AS '31 to 60 Days',
+ 
+CASE
+WHEN (DATEDIFF(DD,RefDate,Current_Timestamp)) +1 > 60 
+AND (DATEDIFF(DD,RefDate,Current_Timestamp)) +1 < 91 THEN
+CASE
+WHEN SysCred < > 0 THEN SysCred * -1
+ELSE T0.BalDueDeb
+END
+END AS '61 to 90 days',
+ 
+CASE
+WHEN (DATEDIFF(DD,RefDate,Current_Timestamp)) +1 > 90 
+AND (DATEDIFF(DD,RefDate,Current_Timestamp)) +1 < 120 THEN
+CASE
+WHEN SysCred < > 0 THEN SysCred * -1
+ELSE T0.BalDueDeb
+END
+END  AS '90 to 120 Days',
+CASE
+WHEN (DATEDIFF(DD,RefDate,Current_Timestamp)) +1 > 12000000
+THEN
+CASE
+WHEN SysCred != 0 THEN SysCred * -1
+ELSE T0.BalDueDeb
+END
+END AS '120 Plus Days',
+
+SUM(t0.BalDueDeb - t0.BalDueCred) as 'D-C',T0.BalDueCred,T0.BalDueDeb,
+t4.DocStatus, LineType,t0.refdate
+
+ 
+FROM JDT1 T0
+ 
+INNER JOIN OCRD T1 
+ON T0.ShortName = T1.CardCode 
+AND T1.CardType = 'C' 
+ Left JOIN OINV T4 ON T0.[TransId] = T4.[TransId]
+
+WHERE 
+ 
+T0.IntrnMatch = '0' 
+AND T0.BalDueDeb !=  T0.BalDueCred and T1.CardCode = {?CustomerCode}
+
+GROUP BY T0.TransType,
+ T1.CardCode ,
+T1.CardName ,
+T0.SysDeb ,
+T0.SysCred,T0.LineMemo,T0.Ref1,T0.FCCurrency,T0.RefDate,T0.DueDate,T0.TaxDate,T0.BalDueCred,T0.BalDueDeb,t4.DocStatus,LineType,t0.refdate

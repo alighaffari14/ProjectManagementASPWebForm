@@ -1,0 +1,300 @@
+
+-- --------------------------------------------------
+-- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
+-- --------------------------------------------------
+-- Date Created: 11/01/2017 13:11:01
+-- Generated from EDMX file: F:\Latest Desktop\SEProject_Final\SEProject.Data\SEModel.edmx
+-- --------------------------------------------------
+
+SET QUOTED_IDENTIFIER OFF;
+GO
+USE [ProjectManagement];
+GO
+IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
+GO
+
+-- --------------------------------------------------
+-- Dropping existing FOREIGN KEY constraints
+-- --------------------------------------------------
+
+
+-- --------------------------------------------------
+-- Dropping existing tables
+-- --------------------------------------------------
+
+IF OBJECT_ID(N'[dbo].[Assigned]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Assigned];
+GO
+IF OBJECT_ID(N'[dbo].[client_partner]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[client_partner];
+GO
+IF OBJECT_ID(N'[dbo].[Employee]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Employee];
+GO
+IF OBJECT_ID(N'[dbo].[on_project]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[on_project];
+GO
+IF OBJECT_ID(N'[dbo].[Project]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Project];
+GO
+IF OBJECT_ID(N'[dbo].[Project_Manager]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Project_Manager];
+GO
+IF OBJECT_ID(N'[dbo].[Role]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Role];
+GO
+IF OBJECT_ID(N'[dbo].[sysdiagrams]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[sysdiagrams];
+GO
+IF OBJECT_ID(N'[dbo].[Task]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Task];
+GO
+IF OBJECT_ID(N'[dbo].[Team]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Team];
+GO
+IF OBJECT_ID(N'[dbo].[Team_Member]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Team_Member];
+GO
+IF OBJECT_ID(N'[dbo].[user_account]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[user_account];
+GO
+IF OBJECT_ID(N'[dbo].[UserRoles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[UserRoles];
+GO
+
+-- --------------------------------------------------
+-- Creating all tables
+-- --------------------------------------------------
+
+-- Creating table 'Assigneds'
+CREATE TABLE [dbo].[Assigneds] (
+    [Assigned_Id] int IDENTITY(1,1) NOT NULL,
+    [Task_Id] int  NULL,
+    [Employee_Id] int  NULL,
+    [Role_Id] int  NULL
+);
+GO
+
+-- Creating table 'client_partner'
+CREATE TABLE [dbo].[client_partner] (
+    [Client_Partner_Id] int IDENTITY(1,1) NOT NULL,
+    [cp_name] varchar(128)  NULL,
+    [cp_address] varchar(255)  NULL,
+    [cp_details] varchar(max)  NULL
+);
+GO
+
+-- Creating table 'Employees'
+CREATE TABLE [dbo].[Employees] (
+    [Employee_Id] int IDENTITY(1,1) NOT NULL,
+    [employee_code] varchar(128)  NULL,
+    [employee_name] varchar(128)  NULL,
+    [User_Account_Id] int  NULL
+);
+GO
+
+-- Creating table 'on_project'
+CREATE TABLE [dbo].[on_project] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Projec_Id] int  NULL,
+    [Client_Partner_Id] int  NULL,
+    [date_start] datetime  NULL,
+    [date_end] datetime  NULL,
+    [is_client] bit  NULL,
+    [is_partner] bit  NULL,
+    [description] nvarchar(50)  NULL
+);
+GO
+
+-- Creating table 'Projects'
+CREATE TABLE [dbo].[Projects] (
+    [Project_Id] int IDENTITY(1,1) NOT NULL,
+    [project_name] varchar(128)  NULL,
+    [planned_start_date] datetime  NULL,
+    [planned_end_date] datetime  NULL,
+    [actual_start_date] datetime  NULL,
+    [actual_end_date] datetime  NULL,
+    [project_description] varchar(max)  NULL,
+    [hourly_rate] int  NULL,
+    [budget] int  NULL,
+    [Active] bit  NULL,
+    [Total_Hours] int  NULL,
+    [Labour_Cost] int  NULL,
+    [Material_Cost] int  NULL,
+    [Total_Cost] int  NULL
+);
+GO
+
+-- Creating table 'Project_Manager'
+CREATE TABLE [dbo].[Project_Manager] (
+    [Project_Manager_Id] int IDENTITY(1,1) NOT NULL,
+    [Project_Id] int  NULL,
+    [User_Account_Id] int  NULL
+);
+GO
+
+-- Creating table 'Roles'
+CREATE TABLE [dbo].[Roles] (
+    [Role_Id] int IDENTITY(1,1) NOT NULL,
+    [role_name] varchar(128)  NULL
+);
+GO
+
+-- Creating table 'sysdiagrams'
+CREATE TABLE [dbo].[sysdiagrams] (
+    [name] nvarchar(128)  NOT NULL,
+    [principal_id] int  NOT NULL,
+    [diagram_id] int IDENTITY(1,1) NOT NULL,
+    [version] int  NULL,
+    [definition] varbinary(max)  NULL
+);
+GO
+
+-- Creating table 'Tasks'
+CREATE TABLE [dbo].[Tasks] (
+    [Task_Id] int IDENTITY(1,1) NOT NULL,
+    [task_name] varchar(255)  NULL,
+    [Project_Id] int  NULL,
+    [priority] int  NULL,
+    [description] varchar(max)  NULL,
+    [planned_start_date] datetime  NULL,
+    [planned_end_date] datetime  NULL,
+    [planned_budget] decimal(8,2)  NULL,
+    [actual_start_time] datetime  NULL,
+    [actual_end_time] datetime  NULL,
+    [actual_budget] decimal(8,2)  NULL
+);
+GO
+
+-- Creating table 'Teams'
+CREATE TABLE [dbo].[Teams] (
+    [Team_Id] int IDENTITY(1,1) NOT NULL,
+    [Team_Name] varchar(128)  NULL
+);
+GO
+
+-- Creating table 'Team_Member'
+CREATE TABLE [dbo].[Team_Member] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Team_Id] int  NULL,
+    [Employee_Id] int  NULL,
+    [Role_Id] nchar(10)  NULL
+);
+GO
+
+-- Creating table 'user_account'
+CREATE TABLE [dbo].[user_account] (
+    [User_Account_Id] int IDENTITY(1,1) NOT NULL,
+    [username] varchar(64)  NULL,
+    [password] varchar(64)  NULL,
+    [email] varchar(255)  NULL,
+    [first_name] varchar(64)  NULL,
+    [last_name] varchar(64)  NULL,
+    [Gender] varchar(50)  NULL,
+    [is_project_manager] bit  NULL,
+    [photo] nvarchar(max)  NULL,
+    [Contact] nvarchar(50)  NULL,
+    [DOB] datetime  NULL,
+    [PasswordResetDate] datetime  NULL,
+    [CreatedOn] datetime  NULL,
+    [IsDeleted] bit  NULL
+);
+GO
+
+-- Creating table 'UserRoles'
+CREATE TABLE [dbo].[UserRoles] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [User_Account_Id] int  NULL,
+    [Role_Id] int  NULL
+);
+GO
+
+-- --------------------------------------------------
+-- Creating all PRIMARY KEY constraints
+-- --------------------------------------------------
+
+-- Creating primary key on [Assigned_Id] in table 'Assigneds'
+ALTER TABLE [dbo].[Assigneds]
+ADD CONSTRAINT [PK_Assigneds]
+    PRIMARY KEY CLUSTERED ([Assigned_Id] ASC);
+GO
+
+-- Creating primary key on [Client_Partner_Id] in table 'client_partner'
+ALTER TABLE [dbo].[client_partner]
+ADD CONSTRAINT [PK_client_partner]
+    PRIMARY KEY CLUSTERED ([Client_Partner_Id] ASC);
+GO
+
+-- Creating primary key on [Employee_Id] in table 'Employees'
+ALTER TABLE [dbo].[Employees]
+ADD CONSTRAINT [PK_Employees]
+    PRIMARY KEY CLUSTERED ([Employee_Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'on_project'
+ALTER TABLE [dbo].[on_project]
+ADD CONSTRAINT [PK_on_project]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Project_Id] in table 'Projects'
+ALTER TABLE [dbo].[Projects]
+ADD CONSTRAINT [PK_Projects]
+    PRIMARY KEY CLUSTERED ([Project_Id] ASC);
+GO
+
+-- Creating primary key on [Project_Manager_Id] in table 'Project_Manager'
+ALTER TABLE [dbo].[Project_Manager]
+ADD CONSTRAINT [PK_Project_Manager]
+    PRIMARY KEY CLUSTERED ([Project_Manager_Id] ASC);
+GO
+
+-- Creating primary key on [Role_Id] in table 'Roles'
+ALTER TABLE [dbo].[Roles]
+ADD CONSTRAINT [PK_Roles]
+    PRIMARY KEY CLUSTERED ([Role_Id] ASC);
+GO
+
+-- Creating primary key on [diagram_id] in table 'sysdiagrams'
+ALTER TABLE [dbo].[sysdiagrams]
+ADD CONSTRAINT [PK_sysdiagrams]
+    PRIMARY KEY CLUSTERED ([diagram_id] ASC);
+GO
+
+-- Creating primary key on [Task_Id] in table 'Tasks'
+ALTER TABLE [dbo].[Tasks]
+ADD CONSTRAINT [PK_Tasks]
+    PRIMARY KEY CLUSTERED ([Task_Id] ASC);
+GO
+
+-- Creating primary key on [Team_Id] in table 'Teams'
+ALTER TABLE [dbo].[Teams]
+ADD CONSTRAINT [PK_Teams]
+    PRIMARY KEY CLUSTERED ([Team_Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Team_Member'
+ALTER TABLE [dbo].[Team_Member]
+ADD CONSTRAINT [PK_Team_Member]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [User_Account_Id] in table 'user_account'
+ALTER TABLE [dbo].[user_account]
+ADD CONSTRAINT [PK_user_account]
+    PRIMARY KEY CLUSTERED ([User_Account_Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'UserRoles'
+ALTER TABLE [dbo].[UserRoles]
+ADD CONSTRAINT [PK_UserRoles]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- --------------------------------------------------
+-- Creating all FOREIGN KEY constraints
+-- --------------------------------------------------
+
+-- --------------------------------------------------
+-- Script has ended
+-- --------------------------------------------------
